@@ -1,54 +1,44 @@
 import Link from "next/link";
+import { Container, Typography, Card, CardContent, Grid, Button, Box } from "@mui/material";
 
-import { LatestPost } from "~/app/_components/post";
-import { api, HydrateClient } from "~/trpc/server";
-import styles from "./index.module.css";
-
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-
-  void api.post.getLatest.prefetch();
-
+export default function Home() {
   return (
-    <HydrateClient>
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <h1 className={styles.title}>
-            Create <span className={styles.pinkSpan}>T3</span> App
-          </h1>
-          <div className={styles.cardRow}>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>First Steps →</h3>
-              <div className={styles.cardText}>
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>Documentation →</h3>
-              <div className={styles.cardText}>
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className={styles.showcaseContainer}>
-            <p className={styles.showcaseText}>
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-          </div>
+    <Container maxWidth="md" sx={{ py: 10 }}>
+      <Typography variant="h2" component="h1" gutterBottom align="center" sx={{ fontWeight: 800, mb: 6 }}>
+        Pokedex Challenge
+      </Typography>
 
-          <LatestPost />
-        </div>
-      </main>
-    </HydrateClient>
+      <Grid container spacing={4} justifyContent="center">
+        {[
+          { id: 1, title: "Part 1: Single Pokemon", desc: "Lookup a single Pokemon by name and display its details." },
+          { id: 2, title: "Part 2: Multiple Pokemon", desc: "Lookup multiple Pokemon by names and display them in a table." },
+          { id: 3, title: "Part 3: Filterable Pokedex", desc: "View all Pokemon and filter by type." }
+        ].map((part) => (
+          <Grid key={part.id} size={{ xs: 12, md: 4 }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', p: 2 }}>
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+                  {part.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  {part.desc}
+                </Typography>
+                <Box sx={{ mt: 'auto' }}>
+                  <Button
+                    component={Link}
+                    href={`/part${part.id}`}
+                    variant="contained"
+                    fullWidth
+                    size="large"
+                  >
+                    Go to Part {part.id}
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 }
